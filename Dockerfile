@@ -1,3 +1,5 @@
+FROM scratch
+
 COPY . /pctm
 
 WORKDIR /pctm
