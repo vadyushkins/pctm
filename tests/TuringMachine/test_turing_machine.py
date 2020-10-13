@@ -16,11 +16,9 @@ def test_turing_machine_automatic(automatic_suite):
     def check():
         for word in accepted_words:
             if tm.accepts(word) is False:
-                print(f'In accepted_words: {word}!!')
                 return False
         for word in not_accepted_words:
             if tm.accepts(word) is True:
-                print(f'In not_accepted_words: {word}!!')
                 return False
         return True
 
