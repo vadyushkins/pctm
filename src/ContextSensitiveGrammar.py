@@ -445,35 +445,6 @@ class ContextSensitiveGrammar:
                             sentences.add(tmp)
                             queue.append(tmp)
 
-    def __substitutions_optimization(self):
-        """
-        Optimizing Context Sensitive Grammar by removing simple substitutions
-        :return: Context Sensitive Grammar with removed simple substitutions
-        """
-        csg = self.copy()
-
-        for head in self.productions:
-            if len(head) == 1 and len(self.productions[head]) == 1:
-                if list(self.productions[head])[0] not in self.productions:
-                    body = csg.productions[head].pop()
-                    csg.productions.pop(head)
-                    for h in csg.productions:
-                        new_body = set()
-                        for b in csg.productions[h]:
-                            if head[0] in b:
-                                new_b = list()
-                                for x in b:
-                                    if x == head[0]:
-                                        new_b += list(body)
-                                    else:
-                                        new_b += x
-                                new_body.add(tuple(new_b))
-                            else:
-                                new_body.add(b)
-                        csg.productions[h] = new_body.copy()
-                    return csg
-        return csg
-
     @classmethod
     def from_lba(cls, lba: TuringMachine):
         """
@@ -512,7 +483,6 @@ class ContextSensitiveGrammar:
             changing = False
             prev = len(csg.productions)
             csg = csg.__deep_optimization()
-            csg = csg.__substitutions_optimization()
             if prev == len(csg.productions):
                 break
 
