@@ -4,6 +4,8 @@ from typing import List
 from src.TuringMachine import TuringMachine
 from collections import deque
 
+import time
+
 
 class ContextSensitiveGrammar:
     def __init__(self):
@@ -13,15 +15,24 @@ class ContextSensitiveGrammar:
         self.start_symbol = 'S'
 
     def accepts(self, word: List):
+        words = set()
         sentences = set()
-        queue = [self.start_symbol]
+        queue = deque([self.start_symbol])
+
+        start = time.time()
 
         while len(queue):
-            words = list()
-            cur = queue[0][:]
-            queue = queue[1:]
+            if time.time() - start >= 9 * 60:
+                return False
 
-            if cur == word:
+            cur = queue.popleft()
+
+            if all(t in self.terminals for t in cur):
+                words.add(cur)
+
+            print(words)
+
+            if word in words:
                 return True
 
             for head in self.productions:
@@ -32,13 +43,6 @@ class ContextSensitiveGrammar:
                         if tmp not in sentences:
                             queue.append(tmp)
                             sentences.add(tmp)
-                        if all(t in self.terminals for t in tmp):
-                            words.append(tmp);
-                            print(words)
-                            if tmp == word:
-                                return True
-                            if len(tmp) > len(word):
-                                return False
         return False
 
     def __add_production(self, head, body):
@@ -277,7 +281,9 @@ class ContextSensitiveGrammar:
             if all(t in csg.terminals for t in cur):
                 words.append(cur)
                 if res.productions != used[cur].productions:
-                    res = used[cur].copy()
+                    for head in used[cur].productions:
+                        for body in used[cur].productions[head]:
+                            res.__add_production(head, body)
                 else:
                     return res
 
