@@ -14,21 +14,21 @@ def main():
         , required=True
     )
     parser.add_argument(
-        '-g'
-        , '--grammar_path'
+        '-cs'
+        , '--context_sensitive_grammar_path'
         , help='Path where to save generated grammar'
         , type=str
         , required=False
-        , default='resources/grammars/default_grammar.txt'
+        , default='resources/grammars/default_csg.txt'
     )
 
     args = parser.parse_args()
 
     tm = TuringMachine.from_txt(args.turing_machine_path)
 
-    gr = ContextSensitiveGrammar.from_lba(tm)
+    csg = ContextSensitiveGrammar.from_lba(tm)
 
-    gr.to_txt(args.grammar_path)
+    csg.to_txt(args.grammar_path)
 
 
 if __name__ == '__main__':
