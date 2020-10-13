@@ -448,29 +448,30 @@ class ContextSensitiveGrammar:
     def __substitutions_optimization(self):
         """
         Optimizing Context Sensitive Grammar by removing simple substitutions
-        :return:
+        :return: Context Sensitive Grammar with removed simple substitutions
         """
         csg = self.copy()
 
         for head in self.productions:
             if len(head) == 1 and len(self.productions[head]) == 1:
-                body = csg.productions[head].pop()
-                csg.productions.pop(head)
-                for h in csg.productions:
-                    new_body = set()
-                    for b in csg.productions[h]:
-                        if head[0] in b:
-                            new_b = list()
-                            for x in b:
-                                if x == head[0]:
-                                    new_b += list(body)
-                                else:
-                                    new_b += x
-                            new_body.add(tuple(new_b))
-                        else:
-                            new_body.add(b)
-                    csg.productions[h] = new_body.copy()
-                return csg
+                if list(self.productions[head])[0] not in self.productions:
+                    body = csg.productions[head].pop()
+                    csg.productions.pop(head)
+                    for h in csg.productions:
+                        new_body = set()
+                        for b in csg.productions[h]:
+                            if head[0] in b:
+                                new_b = list()
+                                for x in b:
+                                    if x == head[0]:
+                                        new_b += list(body)
+                                    else:
+                                        new_b += x
+                                new_body.add(tuple(new_b))
+                            else:
+                                new_body.add(b)
+                        csg.productions[h] = new_body.copy()
+                    return csg
         return csg
 
     @classmethod
