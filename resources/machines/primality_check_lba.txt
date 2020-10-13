@@ -1,7 +1,7 @@
 init: q0
-accept: q2
+accept: qAccept
 sigma: {a}
-gamma: {a,b,A,B,$,#}
+gamma: {a,b,A,B,$,#,_}
 
 q0,$
 q0,$,>
@@ -11,6 +11,9 @@ q1,b,>
 
 q1,a
 q2,B,>
+
+q2,#
+qAccept,#,<
 
 q2,a
 q3,A,>
@@ -64,7 +67,7 @@ q8,a
 q4,A,<
 
 q8,#
-q2,#,<
+qAccept,#,<
 
 q4,#
-q2,#,<
+qAccept,#,<

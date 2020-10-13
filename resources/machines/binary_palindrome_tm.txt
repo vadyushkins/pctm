@@ -1,7 +1,7 @@
 init: q0
 accept: qAccept
 sigma: {0,1}
-gamma: {0,1}
+gamma: {0,1,_}
 
 q0,0
 qRight0,_,>
