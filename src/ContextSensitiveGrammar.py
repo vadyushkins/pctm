@@ -280,7 +280,18 @@ class ContextSensitiveGrammar:
 
             if all(t in csg.terminals for t in cur):
                 words.append(cur)
-                if res.productions != used[cur].productions:
+                flag = False
+                for head in used[cur].productions:
+                    if flag is True:
+                        break
+                    if head not in res.productions:
+                        flag = True
+                        break
+                    for body in used[cur].productions[head]:
+                        if body not in res.productions[head]:
+                            flag = True
+                            break
+                if flag is True:
                     for head in used[cur].productions:
                         for body in used[cur].productions[head]:
                             res.__add_production(head, body)
