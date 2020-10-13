@@ -18,7 +18,7 @@ primes = [x for x in range(8) if is_prime(x)]
 
 params = [
     {
-        'ContextSensitiveGrammar': 'resources/grammars/primality_check_csg.txt'
+        'path': 'resources/grammars/primality_check_csg.txt'
         , 'word': 'a' * p
     }
     for p in primes
@@ -26,5 +26,5 @@ params = [
 
 
 @pytest.fixture(scope='session', params=params)
-def manual_suite(request):
+def suite(request):
     return request.param
