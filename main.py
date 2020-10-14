@@ -28,7 +28,7 @@ def main():
 
     csg = ContextSensitiveGrammar.from_lba(tm)
 
-    csg.to_txt(args.grammar_path)
+    csg.to_txt(args.context_sensitive_grammar_path)
 
 
 if __name__ == '__main__':

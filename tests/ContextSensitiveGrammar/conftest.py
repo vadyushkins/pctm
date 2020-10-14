@@ -14,7 +14,7 @@ def is_prime(n):
     return True
 
 
-primes = [x for x in range(8) if is_prime(x)]
+primes = [x for x in range(14) if is_prime(x)]
 
 params = [
     {

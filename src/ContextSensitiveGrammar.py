@@ -12,6 +12,12 @@ class ContextSensitiveGrammar:
     """
 
     def __init__(self):
+        """
+        Constructuro of Context Sensitive Grammar
+        nonterminals --- set of strings representing nonterminals
+        terminals --- set of strings representing terminals
+        productions --- dictionary matching the head of production to set of bodies
+        """
         self.nonterminals = set()
         self.terminals = set()
         self.productions = dict()
@@ -66,7 +72,12 @@ class ContextSensitiveGrammar:
         :return: Context Sensitive Grammar instance
         """
         csg = ContextSensitiveGrammar()
-        csg.nonterminals = self.nonterminals.copy()
+        csg.nonterminals = set()
+        for head in self.productions:
+            csg.nonterminals |= set(head)
+            for body in self.productions[head]:
+                if body not in self.terminals:
+                    csg.nonterminals |= set(body)
         csg.terminals = self.terminals.copy()
         csg.productions = self.productions.copy()
         csg.start_symbol = self.start_symbol[:]
@@ -445,6 +456,27 @@ class ContextSensitiveGrammar:
                             sentences.add(tmp)
                             queue.append(tmp)
 
+    def __substitutions_optimization(self):
+        for head in filter(lambda h: len(h) == 1, self.productions.keys()):
+            print(f'HEAD: {head}')
+            if len(self.productions[head]) == 1:
+                body = list(self.productions[head])[0]
+                if len(body) == 1:
+                    print(f'BODY: {body[0]}')
+                    csg = self.copy()
+                    csg.productions.clear()
+                    for h in self.productions:
+                        upd = lambda tpl, ptrn, rplc: tuple([x if x != ptrn else rplc for x in tpl])
+                        new_h = upd(h, head[0], body[0])
+                        for b in self.productions[h]:
+                            new_b = upd(b, head[0], body[0])
+                            print(f'NEW HEAD, NEW BODY: {new_h}, {new_b}')
+                            if h != head:
+                                csg.__add_production(new_h, new_b)
+                    return csg
+
+        return self.copy()
+
     @classmethod
     def from_lba(cls, lba: TuringMachine):
         """
@@ -478,11 +510,12 @@ class ContextSensitiveGrammar:
         csg.terminals = lba.sigma.copy()
         csg.start_symbol = start_symbol_1[:]
 
-        changing = True
-        while changing:
-            changing = False
+        while True:
             prev = len(csg.productions)
+            print(f'!! PREV: {prev} !!')
             csg = csg.__deep_optimization()
+            csg = csg.__substitutions_optimization()
+            print(f'!! NEW {len(csg.productions)} !!')
             if prev == len(csg.productions):
                 break
 
