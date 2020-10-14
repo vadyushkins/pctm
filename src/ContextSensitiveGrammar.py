@@ -66,7 +66,12 @@ class ContextSensitiveGrammar:
         :return: Context Sensitive Grammar instance
         """
         csg = ContextSensitiveGrammar()
-        csg.nonterminals = self.nonterminals.copy()
+        csg.nonterminals = set()
+        for head in self.productions:
+            csg.nonterminals.add(head)
+            for body in self.productions[head]:
+                if body not in self.terminals:
+                    csg.nonterminals.add(body)
         csg.terminals = self.terminals.copy()
         csg.productions = self.productions.copy()
         csg.start_symbol = self.start_symbol[:]
@@ -445,6 +450,24 @@ class ContextSensitiveGrammar:
                             sentences.add(tmp)
                             queue.append(tmp)
 
+    def __substitutions_optimization(self):
+        csg = self.copy()
+        csg.productions.clear()
+
+        for head in filter(lambda h: len(h) == 1, self.productions.keys()):
+            if len(self.productions[head]) == 1:
+                body = list(self.productions[head])[0]
+                if len(body) == 1:
+                    for h in self.productions:
+                        upd = lambda tpl, ptrn: tuple([x if x != ptrn else ptrn for x in tpl])
+                        new_h = upd(h, body[0])
+                        for b in self.productions[h]:
+                            new_b = upd(b, body[0])
+                            csg.__add_production(new_h, new_b)
+                    return csg
+
+        return self.copy()
+
     @classmethod
     def from_lba(cls, lba: TuringMachine):
         """
@@ -483,6 +506,7 @@ class ContextSensitiveGrammar:
             changing = False
             prev = len(csg.productions)
             csg = csg.__deep_optimization()
+            csg = csg.__substitutions_optimization()
             if prev == len(csg.productions):
                 break
 
