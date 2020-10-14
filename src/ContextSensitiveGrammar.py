@@ -12,6 +12,12 @@ class ContextSensitiveGrammar:
     """
 
     def __init__(self):
+        """
+        Constructuro of Context Sensitive Grammar
+        nonterminals --- set of strings representing nonterminals
+        terminals --- set of strings representing terminals
+        productions --- dictionary matching the head of production to set of bodies
+        """
         self.nonterminals = set()
         self.terminals = set()
         self.productions = dict()
