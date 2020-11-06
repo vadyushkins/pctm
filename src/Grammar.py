@@ -196,7 +196,7 @@ class Grammar:
         res.productions.clear()
 
         for production in productions:
-            res.productions[production.head].add(production.body)
+            res.productions.append(production)
 
         return res.nonterminals_optimization()
 
