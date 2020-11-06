@@ -394,16 +394,18 @@ class ContextSensitiveGrammar(Grammar):
         g.__add_general_movement_restore_configs(lba)
         g.__add_general_movement_restore_word(lba)
 
-        g.terminals = lba.sigma.copy()
-        g.start_symbol = start_symbol_1[:]
+        g.terminals = set([cfg.Terminal(x) for x in lba.sigma.copy()])
+        g.start_symbol = cfg.Variable(start_symbol_1)
 
         g = g.nonterminals_optimization()
 
         while True:
             prev = len(g.productions)
-            g = g.deep_optimization()
+            print(f'!! PREV {len(g.productions)} !!')
+            g = g.deep_optimization(max_cnt=5)
             g = g.substitutions_optimization()
             g = g.nonterminals_optimization()
+            print(f'!! NEW {len(g.productions)} !!')
             if prev == len(g.productions):
                 break
 

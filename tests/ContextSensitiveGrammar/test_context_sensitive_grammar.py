@@ -1,10 +1,6 @@
-import sys
-
 from pyformlang import cfg
 
 from src.ContextSensitiveGrammar import ContextSensitiveGrammar
-
-sys.setrecursionlimit(10000)
 
 
 def test_csg_manual(suite):
