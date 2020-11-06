@@ -1,5 +1,5 @@
 start_symbol: S1
-nonterminals: [$,q0,a,a] [q4,A,a] [a,a,#] [q5,A,a] [$,b,a] [q1,a,a] [q8,a,a,#] [q2,a,a] [$,B,a] [q6,B,a] [A,a] [q4,b,a] [q7,b,a] [A,a,#] [q6,A,a] [q4,B,a] [q8,a,a] [$,q4,b,a] S1 [q3,B,a] [B,a] a [$,q6,b,a] [q5,B,a] [q3,A,a] [$,q5,B,a] [q7,a,a] [a,a] [q6,b,a] [b,a] [q6,A,a,#] [q3,a,a] S2 [q3,a,a,#]
+nonterminals: [$,q0,a,a] [q4,A,a] [a,a,#] [q5,A,a] [$,b,a] [q1,a,a] [q8,a,a,#] [q2,a,a] [$,B,a] [q6,B,a] [A,a] [q4,b,a] [q7,b,a] [A,a,#] [q6,A,a] [q4,B,a] [q8,a,a] [$,q4,b,a] S1 [q3,B,a] [B,a] [$,q6,b,a] [q5,B,a] [q3,A,a] [$,q5,B,a] [q7,a,a] [a,a] [q6,b,a] [b,a] [q6,A,a,#] [q3,a,a] S2 [q3,a,a,#]
 terminals: a
 S1 -> [$,q0,a,a] S2
 S2 -> [a,a,#]
