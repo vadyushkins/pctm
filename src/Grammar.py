@@ -227,7 +227,9 @@ class Grammar:
             return Production(*substitutied_production)
 
         for production in self.productions:
-            if len(production.head) == 1 and sum(1 for x in self.productions if x.head == production.head) == 1:
+            if len(production.head) == 1 and \
+                    sum(1 for x in self.productions if x.head == production.head) == 1 and \
+                    production.head[0] != self.start_symbol:
                 res = self.copy()
                 res.productions.clear()
                 for x in self.productions:
