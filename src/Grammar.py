@@ -179,10 +179,9 @@ class Grammar:
                 for i in range(len(sentence) - len(production.head) + 1):
                     if production.head == sentence[i:i + len(production.head)]:
                         new_sentence = sentence[:i] + production.body + sentence[i + len(production.head):]
-                        if new_sentence not in used or \
-                                len(used[new_sentence]) > len(used[sentence].copy() + [production]):
+                        if new_sentence not in used:
                             used[new_sentence] = used[sentence].copy() + [production]
-                        queue.append(new_sentence)
+                            queue.append(new_sentence)
 
         productions = list()
         for word in words:
