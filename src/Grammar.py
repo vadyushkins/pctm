@@ -1,6 +1,7 @@
 import pathlib
-from collections import defaultdict, deque
-from typing import DefaultDict
+from collections import deque
+from typing import Deque
+from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Set
@@ -28,7 +29,7 @@ class Grammar:
         self.nonterminals: Set[cfg.Variable] = set()
         self.terminals: Set[cfg.Terminal] = set()
         self.start_symbol: cfg.Variable = cfg.Variable('S')
-        self.productions: DefaultDict[Production.head, Set[Production.body]] = defaultdict(set)
+        self.productions: List[Production] = list()
 
     def accepts(
             self
@@ -53,20 +54,17 @@ class Grammar:
                 return sentence == word
             if depth == 0:
                 return False
-            for head in self.productions:
-                for i in range(len(sentence) - len(head) + 1):
-                    if head == sentence[i:i + len(head)]:
-                        flag = False
-                        for body in self.productions[head]:
-                            if flag is False:
-                                flag |= _accepts(
-                                    sentence[:i] + body + sentence[i + len(head):]
-                                    , depth - 1
-                                )
-                            else:
-                                break
-                        return flag
-            return False
+            flag = False
+            for production in self.productions:
+                for i in range(len(sentence) - len(production.head) + 1):
+                    if production.head == sentence[i:i + len(production.head)]:
+                        flag |= _accepts(
+                            sentence[:i] + production.body + sentence[i + len(production.head):]
+                            , depth - 1
+                        )
+                        if flag:
+                            return True
+            return flag
 
         return _accepts((self.start_symbol,), max_depth)
 
@@ -102,9 +100,8 @@ class Grammar:
             f.write(f'nonterminals: {" ".join(_values(self.nonterminals))}\n')
             f.write(f'terminals: {" ".join(_values(self.terminals))}\n')
 
-            for head in self.productions:
-                for body in self.productions[head]:
-                    f.write(f'{" ".join(_values(head))} -> {" ".join(_values(body))}\n')
+            for production in self.productions:
+                f.write(f'{" ".join(_values(production.head))} -> {" ".join(_values(production.body))}\n')
 
     @classmethod
     def from_txt(cls, path: pathlib.Path):
@@ -122,7 +119,7 @@ class Grammar:
 
             for p in f:
                 head, body = p.strip().split(' -> ')
-                production = Production(
+                g.productions.append(Production(
                     tuple([
                         cfg.Terminal(x) if cfg.Terminal(x) in g.terminals else cfg.Variable(x)
                         for x in head.split()
@@ -131,8 +128,7 @@ class Grammar:
                         cfg.Terminal(x) if cfg.Terminal(x) in g.terminals else cfg.Variable(x)
                         for x in body.split()
                     ])
-                )
-                g.productions[production.head].add(production.body)
+                ))
 
         return g
 
@@ -144,14 +140,13 @@ class Grammar:
         g = self.copy()
         g.nonterminals.clear()
 
-        for head in g.productions:
-            for x in head:
+        for production in g.productions:
+            for x in production.head:
                 if isinstance(x, cfg.Variable):
                     g.nonterminals.add(x)
-            for body in g.productions[head]:
-                for x in body:
-                    if isinstance(x, cfg.Variable):
-                        g.nonterminals.add(x)
+            for x in production.body:
+                if isinstance(x, cfg.Variable):
+                    g.nonterminals.add(x)
 
         return g
 
@@ -162,14 +157,13 @@ class Grammar:
         :return: Grammar instance
         """
 
-        cnt = max_cnt
-        words = set()
-        sentences = set()
-        used = dict()
-        queue = deque([(cfg.Variable(self.start_symbol),)])
+        cnt: int = max_cnt
+        words: Set[Tuple[cfg.Terminal, ...]] = set()
+        sentences: Set[Tuple[Union[cfg.Variable, cfg.Terminal], ...]] = set()
+        used: Dict[Tuple[Union[cfg.Variable, cfg.Terminal], ...], List[Production]] = dict()
+        queue: Deque[Tuple[Union[cfg.Variable, cfg.Terminal], ...]] = deque([(cfg.Variable(self.start_symbol),)])
 
         while len(queue):
-            print(words, len(queue))
             sentence = queue.popleft()
 
             if sentence not in used:
@@ -181,15 +175,14 @@ class Grammar:
                 if cnt == 0:
                     break
 
-            for head in self.productions:
-                for i in range(len(sentence) - len(head) + 1):
-                    if head == sentence[i:i + len(head)]:
-                        for body in self.productions[head]:
-                            new_sentence = sentence[:i] + body + sentence[i + len(head):]
-                            if new_sentence not in sentences:
-                                sentences.add(new_sentence)
-                                used[new_sentence] = used[sentence].copy() + [Production(head, body)]
-                                queue.append(new_sentence)
+            for production in self.productions:
+                for i in range(len(sentence) - len(production.head) + 1):
+                    if production.head == sentence[i:i + len(production.head)]:
+                        new_sentence = sentence[:i] + production.body + sentence[i + len(production.head):]
+                        if new_sentence not in sentences:
+                            sentences.add(new_sentence)
+                            used[new_sentence] = used[sentence].copy() + [production]
+                            queue.append(new_sentence)
 
         productions = list()
         for word in words:
@@ -234,15 +227,14 @@ class Grammar:
                         substitutied_production[i] += substitution.body
             return Production(*substitutied_production)
 
-        for head in self.productions:
-            if len(head) == 1 and len(self.productions[head]) == 1:
-                body = list(self.productions[head])[0]
+        for production in self.productions:
+            if len(production.head) == 1 and sum(1 for x in self.productions if x.head == production.head) == 1:
                 res = self.copy()
                 res.productions.clear()
-                for h in self.productions:
-                    for b in self.productions[h]:
-                        new_production = _update_production(Production(h, b), Production(head, body))
-                        res.productions[new_production.head].add(new_production.body)
+                for x in self.productions:
+                    if x.head != production.head:
+                        new_production = _update_production(x, production)
+                        res.productions.append(new_production)
                 return res.nonterminals_optimization()
 
         return self.copy().nonterminals_optimization()

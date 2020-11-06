@@ -26,11 +26,10 @@ class ContextSensitiveGrammar(Grammar):
         :return: None
         """
         for t in lba.sigma:
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Variable(start_symbol),),
                 (cfg.Variable(f'[{lba.init_state},$,{t},{t},#]'),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
     def __add_single_movement_configs(self, lba: TuringMachine):
         """
@@ -49,30 +48,27 @@ class ContextSensitiveGrammar(Grammar):
                     for next_state, next_symbol, shift in lba.transitions[(cur_state, cur_symbol)]:
                         if cur_symbol == '$' and next_symbol == '$' and shift == '>':
                             for g in lba.gamma:
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[{cur_state},$,{g},{t},#]'),),
                                     (cfg.Variable(f'[$,{next_state},{g},{t},#]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
+
                         elif cur_symbol == '#' and next_symbol == '#' and shift == '<':
                             for g in lba.gamma:
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[$,{g},{t},{cur_state},#]'),),
                                     (cfg.Variable(f'[$,{next_state},{g},{t},#]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
                         elif shift == '<':
-                            production = Production(
+                            self.productions.append(Production(
                                 (cfg.Variable(f'[$,{cur_state},{cur_symbol},{t},#]'),),
                                 (cfg.Variable(f'[{next_state},$,{next_symbol},{t},#]'),)
-                            )
-                            self.productions[production.head].add(production.body)
+                            ))
                         elif shift == '>':
-                            production = Production(
+                            self.productions.append(Production(
                                 (cfg.Variable(f'[$,{cur_state},{cur_symbol},{t},#]'),),
                                 (cfg.Variable(f'[$,{next_symbol},{t},{next_state},#]'),)
-                            )
-                            self.productions[production.head].add(production.body)
+                            ))
 
     def __add_single_movement_restore_configs(self, lba: TuringMachine):
         """
@@ -87,23 +83,20 @@ class ContextSensitiveGrammar(Grammar):
         for accept_state in lba.accept_states:
             for t in lba.sigma:
                 for g in lba.gamma:
-                    production = Production(
+                    self.productions.append(Production(
                         (cfg.Variable(f'[{accept_state},$,{g},{t},#]'),),
                         (cfg.Terminal(f'{t}'),)
-                    )
-                    self.productions[production.head].add(production.body)
+                    ))
 
-                    production = Production(
+                    self.productions.append(Production(
                         (cfg.Variable(f'[$,{accept_state},{g},{t},#]'),),
                         (cfg.Terminal(f'{t}'),)
-                    )
-                    self.productions[production.head].add(production.body)
+                    ))
 
-                    production = Production(
+                    self.productions.append(Production(
                         (cfg.Variable(f'[$,{g},{t},{accept_state},#]'),),
                         (cfg.Terminal(f'{t}'),)
-                    )
-                    self.productions[production.head].add(production.body)
+                    ))
 
     def __add_initial_configs_general(
             self
@@ -125,23 +118,20 @@ class ContextSensitiveGrammar(Grammar):
         :return: None
         """
         for t in lba.sigma:
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Variable(start_symbol_1),),
                 (cfg.Variable(f'[{lba.init_state},$,{t},{t}]'), cfg.Variable(start_symbol_2),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Variable(start_symbol_2),),
                 (cfg.Variable(f'[{t},{t}]'), cfg.Variable(start_symbol_2),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Variable(start_symbol_2),),
                 (cfg.Variable(f'[{t},{t},#]'),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
     def __add_general_movement_configs_left(self, lba: TuringMachine):
         """
@@ -160,34 +150,30 @@ class ContextSensitiveGrammar(Grammar):
                     for next_state, next_symbol, shift in lba.transitions[(cur_state, cur_symbol)]:
                         if cur_symbol == '$' and next_symbol == '$' and shift == '>':
                             for g in lba.gamma:
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[{cur_state},$,{g},{t}]'),),
                                     (cfg.Variable(f'[$,{next_state},{g},{t}]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
                         elif shift == '<':
-                            production = Production(
+                            self.productions.append(Production(
                                 (cfg.Variable(f'[$,{cur_state},{cur_symbol},{t}]'),),
                                 (cfg.Variable(f'[{next_state},$,{next_symbol},{t}]'),)
-                            )
-                            self.productions[production.head].add(production.body)
+                            ))
                         elif shift == '>':
                             for right_g, right_t in product(lba.gamma, lba.sigma):
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[$,{cur_state},{cur_symbol},{t}]'),
                                      cfg.Variable(f'[{right_g},{right_t}]'),),
                                     (cfg.Variable(f'[$,{next_symbol},{t}]'),
                                      cfg.Variable(f'[{next_state},{right_g},{right_t}]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
 
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[$,{cur_state},{cur_symbol},{t}]'),
                                      cfg.Variable(f'[{right_g},{right_t},#]'),),
                                     (cfg.Variable(f'[$,{next_symbol},{t}]'),
                                      cfg.Variable(f'[{next_state},{right_g},{right_t},#]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
 
     def __add_general_movement_configs_center(self, lba: TuringMachine):
         """
@@ -206,37 +192,33 @@ class ContextSensitiveGrammar(Grammar):
                     for next_state, next_symbol, shift in lba.transitions[(cur_state, cur_symbol)]:
                         for right_g, right_t in product(lba.gamma, lba.sigma):
                             if shift == '>':
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[{cur_state},{cur_symbol},{t}]'),
                                      cfg.Variable(f'[{right_g},{right_t}]'),),
                                     (cfg.Variable(f'[{next_symbol},{t}]'),
                                      cfg.Variable(f'[{next_state},{right_g},{right_t}]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
 
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[{cur_state},{cur_symbol},{t}]'),
                                      cfg.Variable(f'[{right_g},{right_t},#]'),),
                                     (cfg.Variable(f'[{next_symbol},{t}]'),
                                      cfg.Variable(f'[{next_state},{right_g},{right_t},#]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
                             elif shift == '<':
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[{right_g},{right_t}]'),
                                      cfg.Variable(f'[{cur_state},{cur_symbol},{t}]'),),
                                     (cfg.Variable(f'[{next_state},{right_g},{right_t}]'),
                                      cfg.Variable(f'[{next_symbol},{t}]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
 
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[$,{right_g},{right_t}]'),
                                      cfg.Variable(f'[{cur_state},{cur_symbol},{t}]'),),
                                     (cfg.Variable(f'[$,{next_state},{right_g},{right_t}]'),
                                      cfg.Variable(f'[{next_symbol},{t}]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
 
     def __add_general_movement_configs_right(self, lba: TuringMachine):
         """
@@ -255,34 +237,30 @@ class ContextSensitiveGrammar(Grammar):
                     for next_state, next_symbol, shift in lba.transitions[(cur_state, cur_symbol)]:
                         if cur_symbol == '#' and next_symbol == '#' and shift == '<':
                             for g in lba.gamma:
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[{g},{t},{cur_state},#]'),),
                                     (cfg.Variable(f'[{next_state},{g},{t},#]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
                         elif shift == '>':
-                            production = Production(
+                            self.productions.append(Production(
                                 (cfg.Variable(f'[{cur_state},{cur_symbol},{t},#]'),),
                                 (cfg.Variable(f'[{next_symbol},{t},{next_state},#]'),)
-                            )
-                            self.productions[production.head].add(production.body)
+                            ))
                         elif shift == '<':
                             for right_g, right_t in product(lba.gamma, lba.sigma):
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[{right_g},{right_t}]'),
                                      cfg.Variable(f'[{cur_state},{cur_symbol},{t},#]'),),
                                     (cfg.Variable(f'[{next_state},{right_g},{right_t}]'),
                                      cfg.Variable(f'[{next_symbol},{t},#]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
 
-                                production = Production(
+                                self.productions.append(Production(
                                     (cfg.Variable(f'[$,{right_g},{right_t}]'),
                                      cfg.Variable(f'[{cur_state},{cur_symbol},{t},#]'),),
                                     (cfg.Variable(f'[$,{next_state},{right_g},{right_t}]'),
                                      cfg.Variable(f'[{next_symbol},{t},#]'),)
-                                )
-                                self.productions[production.head].add(production.body)
+                                ))
 
     def __add_general_movement_restore_configs(self, lba: TuringMachine):
         """
@@ -298,35 +276,30 @@ class ContextSensitiveGrammar(Grammar):
         """
         for g, t in product(lba.gamma, lba.sigma):
             for accept_state in lba.accept_states:
-                production = Production(
+                self.productions.append(Production(
                     (cfg.Variable(f'[{accept_state},$,{g},{t}]'),),
                     (cfg.Terminal(f'{t}'),)
-                )
-                self.productions[production.head].add(production.body)
+                ))
 
-                production = Production(
+                self.productions.append(Production(
                     (cfg.Variable(f'[$,{accept_state},{g},{t}]'),),
                     (cfg.Terminal(f'{t}'),)
-                )
-                self.productions[production.head].add(production.body)
+                ))
 
-                production = Production(
+                self.productions.append(Production(
                     (cfg.Variable(f'[{accept_state},{g},{t}]'),),
                     (cfg.Terminal(f'{t}'),)
-                )
-                self.productions[production.head].add(production.body)
+                ))
 
-                production = Production(
+                self.productions.append(Production(
                     (cfg.Variable(f'[{accept_state},{g},{t},#]'),),
                     (cfg.Terminal(f'{t}'),)
-                )
-                self.productions[production.head].add(production.body)
+                ))
 
-                production = Production(
+                self.productions.append(Production(
                     (cfg.Variable(f'[{g},{t},{accept_state},#]'),),
                     (cfg.Terminal(f'{t}'),)
-                )
-                self.productions[production.head].add(production.body)
+                ))
 
     def __add_general_movement_restore_word(self, lba: TuringMachine):
         """
@@ -340,37 +313,33 @@ class ContextSensitiveGrammar(Grammar):
         :return: None
         """
         for g, t1, t2 in product(lba.gamma, lba.sigma, lba.sigma):
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Terminal(f'{t1}'),
                  cfg.Variable(f'[{g},{t2}]'),),
                 (cfg.Terminal(f'{t1}'),
                  cfg.Terminal(f'{t2}'),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Terminal(f'{t1}'),
                  cfg.Variable(f'[{g},{t2},#]'),),
                 (cfg.Terminal(f'{t1}'),
                  cfg.Terminal(f'{t2}'),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Variable(f'[{g},{t1}]'),
                  cfg.Terminal(f'{t2}'),),
                 (cfg.Terminal(f'{t1}'),
                  cfg.Terminal(f'{t2}'),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
-            production = Production(
+            self.productions.append(Production(
                 (cfg.Variable(f'[$,{g},{t1}]'),
                  cfg.Terminal(f'{t2}'),),
                 (cfg.Terminal(f'{t1}'),
                  cfg.Terminal(f'{t2}'),)
-            )
-            self.productions[production.head].add(production.body)
+            ))
 
     @classmethod
     def from_lba(cls, lba: TuringMachine):
