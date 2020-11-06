@@ -159,11 +159,11 @@ class Grammar:
 
         cnt: int = max_cnt
         words: Set[Tuple[cfg.Terminal, ...]] = set()
-        sentences: Set[Tuple[Union[cfg.Variable, cfg.Terminal], ...]] = set()
         used: Dict[Tuple[Union[cfg.Variable, cfg.Terminal], ...], List[Production]] = dict()
         queue: Deque[Tuple[Union[cfg.Variable, cfg.Terminal], ...]] = deque([(cfg.Variable(self.start_symbol),)])
 
         while len(queue):
+            print(len(queue), words)
             sentence = queue.popleft()
 
             if sentence not in used:
@@ -179,10 +179,10 @@ class Grammar:
                 for i in range(len(sentence) - len(production.head) + 1):
                     if production.head == sentence[i:i + len(production.head)]:
                         new_sentence = sentence[:i] + production.body + sentence[i + len(production.head):]
-                        if new_sentence not in sentences:
-                            sentences.add(new_sentence)
+                        if new_sentence not in used or \
+                                len(used[new_sentence]) > len(used[sentence].copy() + [production]):
                             used[new_sentence] = used[sentence].copy() + [production]
-                            queue.append(new_sentence)
+                        queue.append(new_sentence)
 
         productions = list()
         for word in words:
