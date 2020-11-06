@@ -371,7 +371,7 @@ class ContextSensitiveGrammar(Grammar):
         while True:
             prev = len(g.productions)
             print(f'!! PREV {len(g.productions)} !!')
-            g = g.deep_optimization(max_cnt=5)
+            g = g.deep_optimization(max_cnt=4)
             g = g.substitutions_optimization()
             g = g.nonterminals_optimization()
             print(f'!! NEW {len(g.productions)} !!')
