@@ -1,0 +1,41 @@
+start_symbol: S1
+nonterminals: q2 q7 [,_] S1 S2 [a,A] qAccept q00 [a,a] [a,b] q6 q1 q8 [,$] q3 q0 [a,B] q5 q4
+terminals: a
+S1 -> [,_] q00 S2 [,_]
+S2 -> [a,a] S2
+S2 -> 
+[,_] q00 [a,a] -> q00 [,_] [a,a]
+q00 [,_] -> [,$] q0
+q0 [a,a] -> [a,b] q1
+q1 [a,a] -> [a,B] q2
+q2 [a,a] -> [a,A] q3
+[a,A] q3 [,_] -> q6 [a,A] [,_]
+[a,B] q6 [a,A] -> q6 [a,B] [a,a]
+[a,b] q6 [a,B] -> q6 [a,b] [a,b]
+q6 [a,b] -> [a,b] q7
+q7 [a,b] -> [a,b] q7
+q7 [a,a] -> [a,b] q8
+[a,b] q8 [,_] -> qAccept [a,b] [,_]
+[a,b] qAccept -> qAccept a qAccept
+[,$] qAccept -> qAccept
+qAccept a -> a
+a qAccept -> a
+qAccept [a,b] -> qAccept a qAccept
+qAccept [,_] -> qAccept
+[a,A] q3 [a,a] -> q4 [a,A] [a,A]
+[a,B] q4 [a,A] -> q4 [a,B] [a,A]
+[a,b] q4 [a,B] -> q4 [a,b] [a,B]
+q4 [a,b] -> [a,B] q3
+q3 [a,B] -> [a,B] q3
+q3 [a,A] -> [a,A] q3
+[a,A] q4 [a,A] -> q4 [a,A] [a,A]
+[a,B] q4 [a,B] -> q4 [a,B] [a,B]
+[,$] q4 [a,B] -> q4 [,$] [a,B]
+q4 [,$] -> [,$] q5
+q5 [a,B] -> [a,b] q5
+[a,b] q5 [a,A] -> q4 [a,b] [a,A]
+[a,A] q6 [a,A] -> q6 [a,A] [a,a]
+[a,b] q8 [a,a] -> q4 [a,b] [a,A]
+[a,B] q6 [a,B] -> q6 [a,B] [a,b]
+[a,B] q2 [,_] -> qAccept [a,B] [,_]
+qAccept [a,B] -> qAccept a qAccept

@@ -35,7 +35,7 @@ class TuringMachine:
 
         start: float = time.time()
 
-        while True:
+        while len(queue) != 0:
             if time.time() - start >= 9 * 60:
                 return False
 
@@ -45,6 +45,9 @@ class TuringMachine:
                 if (cur_state, cur_symbol) not in self.transitions or \
                         len(self.transitions[(cur_state, cur_symbol)]) == 0:
                     return True
+
+            if (cur_state, cur_symbol) not in self.transitions:
+                continue
 
             for next_state, next_symbol, shift in self.transitions[(cur_state, cur_symbol)]:
                 new_word: List[str] = \
@@ -66,6 +69,8 @@ class TuringMachine:
 
                 queue.append((new_word, new_pos, new_state, new_symbol))
 
+        return False
+
     @classmethod
     def from_txt(cls, path):
         """
@@ -86,34 +91,34 @@ class TuringMachine:
         with open(path, 'r') as input_file:
             turing_machine.init_state = \
                 input_file \
-                .readline() \
-                .replace('init: ', '') \
-                .strip()
+                    .readline() \
+                    .replace('init: ', '') \
+                    .strip()
 
             turing_machine.accept_states = set(
                 input_file
-                .readline()
-                .replace('accept: ', '')
-                .strip()
-                .split()
+                    .readline()
+                    .replace('accept: ', '')
+                    .strip()
+                    .split()
             )
 
             turing_machine.sigma = set(
                 input_file
-                .readline()
-                .replace('sigma: {', '')
-                .replace('}', '')
-                .strip()
-                .split(',')
+                    .readline()
+                    .replace('sigma: {', '')
+                    .replace('}', '')
+                    .strip()
+                    .split(',')
             )
 
             turing_machine.gamma = set(
                 input_file
-                .readline()
-                .replace('gamma: {', '')
-                .replace('}', '')
-                .strip()
-                .split(',')
+                    .readline()
+                    .replace('gamma: {', '')
+                    .replace('}', '')
+                    .strip()
+                    .split(',')
             )
 
             if not turing_machine.sigma.issubset(turing_machine.gamma):

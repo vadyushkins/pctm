@@ -32,12 +32,14 @@ class Grammar:
         self.start_symbol: cfg.Variable = cfg.Variable('S')
         self.productions: List[Production] = list()
 
-    def accepts(self, word: Tuple[cfg.Terminal, ...]) -> bool:
+    def accepts(self, word: str) -> bool:
         """
         Returns whether the Context Sensitive Grammar generates the given word
         :param word: Tuple from grammar terminals
         :return: Boolean value - did the function succeed in generating the word output tree
         """
+
+        word = tuple(cfg.Terminal(x) for x in word)
 
         used: Dict[
             Tuple[Union[cfg.Variable, cfg.Terminal], ...],
@@ -144,7 +146,7 @@ class Grammar:
             }
 
             for production in input_file:
-                head, body = production.strip().split(' -> ')
+                head, body = production.split(' -> ')
                 grammar.productions.append(Production(
                     tuple(
                         cfg.Terminal(x) if cfg.Terminal(x) in grammar.terminals else cfg.Variable(x)
@@ -197,6 +199,7 @@ class Grammar:
 
         while len(queue) != 0:
             sentence: Tuple[Union[cfg.Variable, cfg.Terminal], ...] = queue.popleft()
+            print(len(queue), words)
 
             if sentence not in used:
                 used[sentence] = list()
