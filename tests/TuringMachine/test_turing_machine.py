@@ -1,8 +1,18 @@
-from src.TuringMachine import TuringMachine
+""" Turing Machine Tests module """
+
+from src.turing_machine import TuringMachine
 
 
 def test_turing_machine(suite):
-    tm = TuringMachine.from_txt(suite['path'])
+    """
+    Checks that the given Turing Machine accepts the given word
+    :param suite: Dictionary with test suite
+        Dict['path'] - path to the file with the Turing Machine
+        Dict['word'] - accepted by the Turing Machine
+    :return: None
+    """
+
+    turing_machine = TuringMachine.from_txt(suite['path'])
     word = suite['word']
 
-    assert tm.accepts(word) is True
+    assert turing_machine.accepts(word) is True

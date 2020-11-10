@@ -1,38 +1,19 @@
 import pytest
 
-
-def is_prime(n):
-    if n < 2:
-        return False
-
-    i = 2
-    while i * i <= n:
-        if n % i == 0:
-            return False
-        i += 1
-
-    return True
-
-
-binary_palindromes = [
-    list(bin(x)[2:] + bin(x)[::-1][:-2])
-    for x in range(42)
-]
-
-primes = [x for x in range(8) if is_prime(x)]
+from src.utils import is_prime
 
 params = [
              {
                  'path': 'resources/machines/binary_palindrome_tm.txt'
-                 , 'word': list(word)
+                 , 'word': list(bin(x)[2:] + bin(x)[::-1][:-2])
              }
-             for word in binary_palindromes
+             for x in range(42)
          ] + [
              {
                  'path': 'resources/machines/primality_check_lba.txt'
                  , 'word': list(f'${"a" * n}#')
              }
-             for n in primes
+             for n in range(24) if is_prime(n)
          ]
 
 

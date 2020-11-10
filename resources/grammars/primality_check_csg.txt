@@ -1,9 +1,17 @@
 start_symbol: S1
-nonterminals: [a,a] [q7,a,a] [$,q4,b,a] [q3,a,a] [q6,B,a] [q5,A,a] S2 [B,a] [q1,a,a] [a,a,#] [A,a] [q3,B,a] [q3,A,a,#] [q6,A,a,#] [$,B,a] [$,q6,b,a] [$,q5,B,a] [q8,a,a] [$,q0,a,a] [q8,a,a,#] [q2,a,a] [q4,b,a] [q4,B,a] [A,a,#] [q6,b,a] [q1,a,a,#] [b,a] [q3,A,a] [q7,a,a,#] [q3,a,a,#] [q5,B,a] [q7,b,a] [q2,a,a,#] [q4,A,a] [$,b,a] [q6,A,a] [$,q4,B,a]
+nonterminals: [$,q6,b,a] [a,a,#] [b,a] [q4,b,a] [A,a,#] [q8,a,a] [q3,a,a] [q4,B,a] [q7,b,a] [q3,a,a,#] S2 [q5,B,a] [$,b,a] [$,q4,b,a] [q1,a,a] [q7,a,a] [q6,A,a] [$,q5,B,a] [q2,a,a] [q4,A,a] [q6,B,a] [A,a] [q6,A,a,#] [q5,A,a] [q3,B,a] [a,a] [q8,a,a,#] [$,q0,a,a] [q6,b,a] [$,B,a] [q3,A,a] S1 [B,a]
 terminals: a
+S1 -> [$,q0,a,a] S2
 S2 -> [a,a] S2
 S2 -> [a,a,#]
 [$,q0,a,a] [a,a] -> [$,b,a] [q1,a,a]
+[q1,a,a] [a,a,#] -> [B,a] [q6,A,a,#]
+[B,a] [q6,A,a,#] -> [q6,B,a] [a,a,#]
+[$,b,a] [q6,B,a] -> [$,q6,b,a] [b,a]
+[$,q6,b,a] [b,a] -> [$,b,a] [q7,b,a]
+[q7,b,a] [a,a,#] -> [b,a] a
+[b,a] a -> a a
+[$,b,a] a -> a a
 [q1,a,a] [a,a] -> [B,a] [q2,a,a]
 [q2,a,a] [a,a] -> [A,a] [q3,a,a]
 [A,a] [q3,a,a] -> [q4,A,a] [A,a]
@@ -14,19 +22,17 @@ S2 -> [a,a,#]
 [q3,A,a] [A,a] -> [A,a] [q3,A,a]
 [q3,A,a] [a,a] -> [A,a] [q3,a,a]
 [A,a] [q4,A,a] -> [q4,A,a] [A,a]
-[$,B,a] [q4,B,a] -> [$,q4,B,a] [B,a]
+[$,B,a] [q4,B,a] -> [$,q5,B,a] [B,a]
 [$,q5,B,a] [B,a] -> [$,b,a] [q5,B,a]
 [q5,B,a] [A,a] -> [b,a] [q5,A,a]
 [b,a] [q5,A,a] -> [q4,b,a] [A,a]
 [q4,b,a] [A,a] -> [B,a] [q3,A,a]
 [q3,A,a] [a,a,#] -> [A,a] [q3,a,a,#]
 [A,a] [q3,a,a,#] -> [q4,A,a] [A,a,#]
-[q3,A,a] [A,a,#] -> [A,a] [q3,A,a,#]
+[q3,A,a] [A,a,#] -> [A,a] [q6,A,a,#]
 [A,a] [q6,A,a,#] -> [q6,A,a] [a,a,#]
 [A,a] [q6,A,a] -> [q6,A,a] [a,a]
 [B,a] [q6,A,a] -> [q6,B,a] [a,a]
-[$,b,a] [q6,B,a] -> [$,q6,b,a] [b,a]
-[$,q6,b,a] [b,a] -> [$,b,a] [q7,b,a]
 [q7,b,a] [a,a] -> [b,a] [q7,a,a]
 [q7,a,a] [a,a] -> [b,a] [q8,a,a]
 [b,a] [q8,a,a] -> [q4,b,a] [A,a]
@@ -41,10 +47,5 @@ S2 -> [a,a,#]
 [q7,b,a] [b,a] -> [b,a] [q7,b,a]
 [q7,a,a] [a,a,#] -> [b,a] [q8,a,a,#]
 [b,a] [q8,a,a,#] -> [q4,b,a] [A,a,#]
-[q4,b,a] [A,a,#] -> [B,a] [q3,A,a,#]
-[B,a] [q6,A,a,#] -> [q6,B,a] [a,a,#]
-[q7,b,a] [a,a,#] -> [b,a] [q7,a,a,#]
-[b,a] a -> a a
-[$,b,a] a -> a a
-[q1,a,a] [a,a,#] -> [B,a] [q2,a,a,#]
-[$,q0,a,a] [a,a,#] -> [$,b,a] [q1,a,a,#]
+[q4,b,a] [A,a,#] -> [B,a] [q6,A,a,#]
+[$,q0,a,a] [a,a,#] -> [$,b,a] a

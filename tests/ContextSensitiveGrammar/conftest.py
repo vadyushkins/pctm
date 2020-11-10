@@ -1,27 +1,13 @@
 import pytest
 
-
-def is_prime(n):
-    if n < 2:
-        return False
-
-    i = 2
-    while i * i <= n:
-        if n % i == 0:
-            return False
-        i += 1
-
-    return True
-
-
-primes = [x for x in range(14) if is_prime(x)]
+from src.utils import is_prime
 
 params = [
     {
         'path': 'resources/grammars/primality_check_csg.txt'
         , 'word': 'a' * p
     }
-    for p in primes
+    for p in range(24) if is_prime(p)
 ]
 
 

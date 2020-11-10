@@ -1,7 +1,7 @@
 import argparse
 
-from src.ContextSensitiveGrammar import ContextSensitiveGrammar
-from src.TuringMachine import TuringMachine
+from src.context_sensitive_grammar import ContextSensitiveGrammar
+from src.turing_machine import TuringMachine
 
 
 def main():
