@@ -1,9 +1,8 @@
 start_symbol: S1
 nonterminals: q2 q7 [,_] S1 S2 [a,A] qAccept q00 [a,a] [a,b] q6 q1 q8 [,$] q3 q0 [a,B] q5 q4
 terminals: a
-S1 -> [,_] q00 S2 [,_]
-S2 -> [a,a] S2
-S2 -> 
+S1 -> [,_] q00 [a,a] [,_]
+[a,a] -> [a,a] [a,a]
 [,_] q00 [a,a] -> q00 [,_] [a,a]
 q00 [,_] -> [,$] q0
 q0 [a,a] -> [a,b] q1
