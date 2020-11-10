@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-""" Command-Line interface for interacting with Turing Machines or Grammars """
+""" Command-Line interface for interacting with Turing Machines and Grammars """
 
 import argparse
 from datetime import timedelta
