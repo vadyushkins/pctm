@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/viabzalov/pctm.svg?branch=dev)](https://travis-ci.com/viabzalov/pctm)
+[![Build Status](https://travis-ci.com/viabzalov/pctm.svg?branch=main)](https://travis-ci.com/viabzalov/pctm)
+
 # pctm
 Turing Machine for Primality Check in Unary Alphabet
 
