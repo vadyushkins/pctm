@@ -7,7 +7,7 @@ params = [
         'path': 'resources/primality_check_ug.txt'
         , 'word': 'a' * p
     }
-    for p in range(24) if is_prime(p)
+    for p in range(16) if is_prime(p)
 ]
 
 
