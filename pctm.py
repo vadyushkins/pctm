@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-""" Command-Line interface for interacting with Turing Machines and Grammars """
+""" Command-Line interface for interacting with Turing Machines and Grammars for primality check """
 
 import argparse
 from datetime import timedelta
@@ -20,6 +20,8 @@ def print_trace(
         res: Tuple[List[Production], List[Tuple[Union[cfg.Variable, cfg.Terminal], ...]]]
         , grammar: Union[ContextSensitiveGrammar, UnrestrictedGrammar]
 ):
+    """ Print word output trace """
+
     productions, sentences = res
     for i in range(len(productions)):
         sentence_from = list(map(lambda x: x.value, sentences[i]))
@@ -33,6 +35,8 @@ def print_trace(
 
 
 def main():
+    """ Command-Line tool for interacting with Turing Machines and Grammars for primality check """
+
     parser = argparse.ArgumentParser(
         description='Primality Check Turing Machine'
         , epilog="At least one of -tm/--turing_machine, "
