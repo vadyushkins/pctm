@@ -6,10 +6,30 @@
 import argparse
 from datetime import timedelta
 from timeit import default_timer as timer
+from typing import Tuple, List, Union
+
+from pyformlang import cfg
 
 from src.context_sensitive_grammar import ContextSensitiveGrammar
+from src.my_production import Production
 from src.turing_machine import TuringMachine
 from src.unrestricted_grammar import UnrestrictedGrammar
+
+
+def print_trace(
+        res: Tuple[List[Production], List[Tuple[Union[cfg.Variable, cfg.Terminal], ...]]]
+        , grammar: Union[ContextSensitiveGrammar, UnrestrictedGrammar]
+):
+    productions, sentences = res
+    for i in range(len(productions)):
+        sentence_from = list(map(lambda x: x.value, sentences[i]))
+        if sentence_from == [grammar.start_symbol]:
+            sentence_from = [grammar.start_symbol.value]
+        production_head = list(map(lambda x: x.value, productions[i].head))
+        production_body = list(map(lambda x: x.value, productions[i].body))
+        sentence_to = list(map(lambda x: x.value, sentences[i + 1]))
+        print(
+            f'{" ".join(sentence_from)} : {" ".join(production_head)} -> {" ".join(production_body)} : {" ".join(sentence_to)}')
 
 
 def main():
@@ -84,25 +104,37 @@ def main():
         start = timer()
         res = turing_machine.accepts(args.word)
         end = timer()
-        print(f'Check by Turing Machine: {res} is done in {timedelta(seconds=end - start)} seconds')
+        result = res != tuple
+        result_time = timedelta(seconds=end - start)
+        print(f'Check by Turing Machine: {result} is done in {result_time} seconds')
 
     if linear_bounded_automaton is not None:
         start = timer()
         res = linear_bounded_automaton.accepts("$" + args.word + "#")
         end = timer()
-        print(f'Check by Linear Bounded Automaton: {res} is done in {timedelta(seconds=end - start)} seconds')
+        result = res != tuple
+        result_time = timedelta(seconds=end - start)
+        print(f'Check by Linear Bounded Automaton: {result} is done in {result_time} seconds')
 
     if context_sensitive_grammar is not None:
         start = timer()
         res = context_sensitive_grammar.accepts(args.word)
         end = timer()
-        print(f'Check by Context Sensitive Grammar: {res} is done in {timedelta(seconds=end - start)} seconds')
+        result = res != tuple
+        result_time = timedelta(seconds=end - start)
+        print(f'Check by Context Sensitive Grammar: {result} is done in {result_time} seconds')
+        if result:
+            print_trace(res, context_sensitive_grammar)
 
     if unrestricted_grammar is not None:
         start = timer()
         res = unrestricted_grammar.accepts(args.word)
         end = timer()
-        print(f'Check by Unrestricted Grammar: {res} is done in {timedelta(seconds=end - start)} seconds')
+        result = res != tuple
+        result_time = timedelta(seconds=end - start)
+        print(f'Check by Unrestricted Grammar: {result} is done in {result_time} seconds')
+        if result:
+            print_trace(res, unrestricted_grammar)
 
 
 if __name__ == '__main__':
