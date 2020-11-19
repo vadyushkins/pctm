@@ -32,11 +32,16 @@ class Grammar:
         self.start_symbol: cfg.Variable = cfg.Variable('S')
         self.productions: List[Production] = list()
 
-    def accepts(self, word: str) -> bool:
+    def accepts(self, word: str) -> Tuple[
+        List[Production],
+        List[Tuple[Union[cfg.Variable, cfg.Terminal], ...]]
+    ]:
         """
         Returns whether the Context Sensitive Grammar generates the given word
         :param word: Tuple from grammar terminals
-        :return: Boolean value - did the function succeed in generating the word output tree
+        :return: Tuple(used productions, sentences)
+        if Context Sensitive Grammar generates the given word
+        else empty tuple
         """
 
         word = tuple(cfg.Terminal(x) for x in word)
@@ -44,6 +49,11 @@ class Grammar:
         used: Dict[
             Tuple[Union[cfg.Variable, cfg.Terminal], ...],
             List[Production]
+        ] = dict()
+
+        parent: Dict[
+            Tuple[Union[cfg.Variable, cfg.Terminal], ...],
+            Tuple[Union[cfg.Variable, cfg.Terminal], ...]
         ] = dict()
 
         queue: Deque[Tuple[Union[cfg.Variable, cfg.Terminal], ...]] = \
@@ -57,9 +67,16 @@ class Grammar:
 
             if all(isinstance(x, cfg.Terminal) for x in sentence):
                 if sentence == word:
-                    return True
+                    trace = list()
+                    prev = word
+                    while prev in parent:
+                        trace.append(prev)
+                        prev = parent[prev]
+                    trace.append(prev)
+                    trace.reverse()
+                    return used[word], trace
                 if len(sentence) > len(word):
-                    return False
+                    return tuple()
 
             for production in self.productions:
                 for i in range(len(sentence) - len(production.head) + 1):
@@ -68,6 +85,7 @@ class Grammar:
                             sentence[:i] + production.body + sentence[i + len(production.head):]
                         if new_sentence not in used:
                             used[new_sentence] = used[sentence].copy() + [production]
+                            parent[new_sentence] = sentence
                             if any(isinstance(x, cfg.Terminal) for x in new_sentence):
                                 queue.appendleft(new_sentence)
                             else:
@@ -78,7 +96,7 @@ class Grammar:
                 , key=lambda y: sum(1 for x in y if isinstance(x, cfg.Variable))
             ))
 
-        return False
+        return tuple()
 
     def copy(self):
         """
@@ -178,6 +196,46 @@ class Grammar:
                     grammar.nonterminals.add(unit)
 
         return grammar
+
+    def names_optimization(self):
+        """
+        Renames all nonterminals with nice names
+        :return: Grammar instance
+        """
+
+        rename: Dict[cfg.Variable, cfg.Variable] = {
+            self.start_symbol: cfg.Variable('S')
+        }
+
+        grammar = self.copy()
+        grammar.start_symbol = rename[self.start_symbol]
+        grammar.nonterminals.clear()
+        grammar.productions.clear()
+
+        for nonterminal in self.nonterminals:
+            if nonterminal not in rename:
+                rename[nonterminal] = \
+                    cfg.Variable(rename[self.start_symbol].value + f'{len(rename)}')
+            grammar.nonterminals.add(rename[nonterminal])
+
+        for production in self.productions:
+            new_production = Production(tuple(), tuple())
+
+            for unit in production.head:
+                if unit in self.nonterminals:
+                    new_production.head += (rename[unit],)
+                else:
+                    new_production.head += (unit,)
+
+            for unit in production.body:
+                if unit in self.nonterminals:
+                    new_production.body += (rename[unit],)
+                else:
+                    new_production.body += (unit,)
+
+            grammar.productions.append(new_production)
+
+        return grammar.nonterminals_optimization()
 
     def deep_optimization(self, max_cnt: int = -1):
         """

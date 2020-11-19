@@ -1,51 +1,51 @@
-start_symbol: S1
-nonterminals: [$,q6,b,a] [a,a,#] [b,a] [q4,b,a] [A,a,#] [q8,a,a] [q3,a,a] [q4,B,a] [q7,b,a] [q3,a,a,#] S2 [q5,B,a] [$,b,a] [$,q4,b,a] [q1,a,a] [q7,a,a] [q6,A,a] [$,q5,B,a] [q2,a,a] [q4,A,a] [q6,B,a] [A,a] [q6,A,a,#] [q5,A,a] [q3,B,a] [a,a] [q8,a,a,#] [$,q0,a,a] [q6,b,a] [$,B,a] [q3,A,a] S1 [B,a]
+start_symbol: S
+nonterminals: S10 S4 S6 S28 S14 S11 S24 S20 S2 S31 S19 S23 S13 S25 S12 S1 S29 S7 S15 S3 S18 S S21 S17 S27 S16 S5 S32 S8 S9 S22 S26 S30
 terminals: a
-S1 -> [$,q0,a,a] S2
-S2 -> [a,a] S2
-S2 -> [a,a,#]
-[$,q0,a,a] [a,a] -> [$,b,a] [q1,a,a]
-[q1,a,a] [a,a,#] -> [B,a] [q6,A,a,#]
-[B,a] [q6,A,a,#] -> [q6,B,a] [a,a,#]
-[$,b,a] [q6,B,a] -> [$,q6,b,a] [b,a]
-[$,q6,b,a] [b,a] -> [$,b,a] [q7,b,a]
-[q7,b,a] [a,a,#] -> [b,a] a
-[b,a] a -> a a
-[$,b,a] a -> a a
-[q1,a,a] [a,a] -> [B,a] [q2,a,a]
-[q2,a,a] [a,a] -> [A,a] [q3,a,a]
-[A,a] [q3,a,a] -> [q4,A,a] [A,a]
-[B,a] [q4,A,a] -> [q4,B,a] [A,a]
-[$,b,a] [q4,B,a] -> [$,q4,b,a] [B,a]
-[$,q4,b,a] [B,a] -> [$,B,a] [q3,B,a]
-[q3,B,a] [A,a] -> [B,a] [q3,A,a]
-[q3,A,a] [A,a] -> [A,a] [q3,A,a]
-[q3,A,a] [a,a] -> [A,a] [q3,a,a]
-[A,a] [q4,A,a] -> [q4,A,a] [A,a]
-[$,B,a] [q4,B,a] -> [$,q5,B,a] [B,a]
-[$,q5,B,a] [B,a] -> [$,b,a] [q5,B,a]
-[q5,B,a] [A,a] -> [b,a] [q5,A,a]
-[b,a] [q5,A,a] -> [q4,b,a] [A,a]
-[q4,b,a] [A,a] -> [B,a] [q3,A,a]
-[q3,A,a] [a,a,#] -> [A,a] [q3,a,a,#]
-[A,a] [q3,a,a,#] -> [q4,A,a] [A,a,#]
-[q3,A,a] [A,a,#] -> [A,a] [q6,A,a,#]
-[A,a] [q6,A,a,#] -> [q6,A,a] [a,a,#]
-[A,a] [q6,A,a] -> [q6,A,a] [a,a]
-[B,a] [q6,A,a] -> [q6,B,a] [a,a]
-[q7,b,a] [a,a] -> [b,a] [q7,a,a]
-[q7,a,a] [a,a] -> [b,a] [q8,a,a]
-[b,a] [q8,a,a] -> [q4,b,a] [A,a]
-[b,a] [q4,B,a] -> [q4,b,a] [B,a]
-[q4,b,a] [B,a] -> [B,a] [q3,B,a]
-[B,a] [q4,B,a] -> [q4,B,a] [B,a]
-[q3,B,a] [B,a] -> [B,a] [q3,B,a]
-[q5,B,a] [B,a] -> [b,a] [q5,B,a]
-[b,a] [q6,B,a] -> [q6,b,a] [b,a]
-[q6,b,a] [b,a] -> [b,a] [q7,b,a]
-[B,a] [q6,B,a] -> [q6,B,a] [b,a]
-[q7,b,a] [b,a] -> [b,a] [q7,b,a]
-[q7,a,a] [a,a,#] -> [b,a] [q8,a,a,#]
-[b,a] [q8,a,a,#] -> [q4,b,a] [A,a,#]
-[q4,b,a] [A,a,#] -> [B,a] [q6,A,a,#]
-[$,q0,a,a] [a,a,#] -> [$,b,a] a
+S -> S15 S7
+S7 -> S24 S7
+S7 -> S10
+S15 S24 -> S31 S2
+S2 S10 -> S25 S23
+S25 S23 -> S22 S10
+S31 S22 -> S27 S19
+S27 S19 -> S31 S16
+S16 S10 -> S19 a
+S19 a -> a a
+S31 a -> a a
+S2 S24 -> S25 S30
+S30 S24 -> S28 S13
+S28 S13 -> S21 S28
+S25 S21 -> S11 S28
+S31 S11 -> S1 S25
+S1 S25 -> S3 S4
+S4 S28 -> S25 S8
+S8 S28 -> S28 S8
+S8 S24 -> S28 S13
+S28 S21 -> S21 S28
+S3 S11 -> S6 S25
+S6 S25 -> S31 S29
+S29 S28 -> S19 S14
+S19 S14 -> S18 S28
+S18 S28 -> S25 S8
+S8 S10 -> S28 S5
+S28 S5 -> S21 S9
+S8 S9 -> S28 S23
+S28 S23 -> S32 S10
+S28 S32 -> S32 S24
+S25 S32 -> S22 S24
+S16 S24 -> S19 S12
+S12 S24 -> S19 S20
+S19 S20 -> S18 S28
+S19 S11 -> S18 S25
+S18 S25 -> S25 S4
+S25 S11 -> S11 S25
+S4 S25 -> S25 S4
+S29 S25 -> S19 S29
+S19 S22 -> S17 S19
+S17 S19 -> S19 S16
+S25 S22 -> S22 S19
+S16 S19 -> S19 S16
+S12 S10 -> S19 S26
+S19 S26 -> S18 S9
+S18 S9 -> S25 S23
+S15 S10 -> S31 a
