@@ -2,6 +2,8 @@
 
 from src.unrestricted_grammar import UnrestrictedGrammar
 
+from src.utils import is_prime
+
 
 def test_csg_manual(suite):
     """
@@ -15,4 +17,4 @@ def test_csg_manual(suite):
     grammar = UnrestrictedGrammar.from_txt(suite['path'])
     word = suite['word']
 
-    assert grammar.accepts(word)
+    assert (grammar.accepts(word) != tuple()) == is_prime(len(word))
