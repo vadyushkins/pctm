@@ -2,6 +2,8 @@
 
 from src.turing_machine import TuringMachine
 
+from src.utils import is_prime
+
 
 def test_turing_machine(suite):
     """
@@ -15,4 +17,4 @@ def test_turing_machine(suite):
     turing_machine = TuringMachine.from_txt(suite['path'])
     word = suite['word']
 
-    assert turing_machine.accepts(word) is True
+    assert turing_machine.accepts(word) == is_prime(len(word) - 2)
