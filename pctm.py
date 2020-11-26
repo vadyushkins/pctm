@@ -108,23 +108,21 @@ def main():
         start = timer()
         res = turing_machine.accepts(args.word)
         end = timer()
-        result = res != tuple
         result_time = timedelta(seconds=end - start)
-        print(f'Check by Turing Machine: {result} is done in {result_time} seconds')
+        print(f'Check by Turing Machine: {res} is done in {result_time} seconds')
 
     if linear_bounded_automaton is not None:
         start = timer()
         res = linear_bounded_automaton.accepts("$" + args.word + "#")
         end = timer()
-        result = res != tuple
         result_time = timedelta(seconds=end - start)
-        print(f'Check by Linear Bounded Automaton: {result} is done in {result_time} seconds')
+        print(f'Check by Linear Bounded Automaton: {res} is done in {result_time} seconds')
 
     if context_sensitive_grammar is not None:
         start = timer()
         res = context_sensitive_grammar.accepts(args.word)
         end = timer()
-        result = res != tuple
+        result = res != tuple()
         result_time = timedelta(seconds=end - start)
         print(f'Check by Context Sensitive Grammar: {result} is done in {result_time} seconds')
         if result:
@@ -134,7 +132,7 @@ def main():
         start = timer()
         res = unrestricted_grammar.accepts(args.word)
         end = timer()
-        result = res != tuple
+        result = res != tuple()
         result_time = timedelta(seconds=end - start)
         print(f'Check by Unrestricted Grammar: {result} is done in {result_time} seconds')
         if result:

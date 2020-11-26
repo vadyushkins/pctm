@@ -2,6 +2,8 @@
 
 from src.context_sensitive_grammar import ContextSensitiveGrammar
 
+from src.utils import is_prime
+
 
 def test_csg_manual(suite):
     """
@@ -15,4 +17,4 @@ def test_csg_manual(suite):
     grammar = ContextSensitiveGrammar.from_txt(suite['path'])
     word = suite['word']
 
-    assert grammar.accepts(word)
+    assert (grammar.accepts(word) != tuple()) == is_prime(len(word))
