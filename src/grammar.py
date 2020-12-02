@@ -62,10 +62,14 @@ class Grammar:
         while len(queue) != 0:
             sentence: Tuple[Union[cfg.Variable, cfg.Terminal], ...] = queue.popleft()
 
+            if len(sentence) > 2 * len(word):
+                continue
+
             if sentence not in used:
                 used[sentence] = list()
 
             if all(isinstance(x, cfg.Terminal) for x in sentence):
+                print("".join(map(lambda x: x.value, sentence)))
                 if sentence == word:
                     trace = list()
                     prev = word
@@ -76,7 +80,7 @@ class Grammar:
                     trace.reverse()
                     return used[word], trace
                 if len(sentence) > len(word):
-                    return tuple()
+                    continue
 
             for production in self.productions:
                 for i in range(len(sentence) - len(production.head) + 1):
