@@ -23,6 +23,7 @@ def print_trace(
     """ Print word output trace """
 
     productions, sentences = res
+    output: List[Tuple[str, str, str]] = list()
     for i in range(len(productions)):
         sentence_from = list(map(lambda x: x.value, sentences[i]))
         if sentence_from == [grammar.start_symbol]:
@@ -30,8 +31,21 @@ def print_trace(
         production_head = list(map(lambda x: x.value, productions[i].head))
         production_body = list(map(lambda x: x.value, productions[i].body))
         sentence_to = list(map(lambda x: x.value, sentences[i + 1]))
+        output.append(
+            (f'{" ".join(sentence_from)}',
+             f'{grammar.productions.index(productions[i]) + 1}) {" ".join(production_head)} -> {" ".join(production_body)}',
+             f'{" ".join(sentence_to)}')
+        )
+    formats = [-1] * 3
+    for s in output:
+        for i in range(3):
+            formats[i] = max(formats[i], len(s[i]) + 1)
+    for s in output:
         print(
-            f'{" ".join(sentence_from)} : {" ".join(production_head)} -> {" ".join(production_body)} : {" ".join(sentence_to)}')
+            ('{0:<' + str(formats[0]) + '}').format(s[0]) + ' : ' +
+            ('{0:<' + str(formats[1]) + '}').format(s[1]) + ' : ' +
+            ('{0:<' + str(formats[2]) + '}').format(s[2])
+        )
 
 
 def main():
