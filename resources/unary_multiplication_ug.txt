@@ -1,11 +1,12 @@
 start_symbol: S
-nonterminals: S A B C
+nonterminals: S A B C D
 terminals: 1 * =
 S -> 1 * A 1 = 1
-* A -> * A 1 C
-1 * A -> 1 1 * A B
+A -> A 1 C
+* A -> * D
+1 * D -> 1 1 * D B
 B 1 -> C 1 B
 B = -> =
 C 1 -> 1 C
 C = -> = 1
-1 * A -> 1 *
+1 * D -> 1 *
