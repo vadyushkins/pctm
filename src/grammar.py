@@ -69,7 +69,6 @@ class Grammar:
                 used[sentence] = list()
 
             if all(isinstance(x, cfg.Terminal) for x in sentence):
-                print("".join(map(lambda x: x.value, sentence)))
                 if sentence == word:
                     trace = list()
                     prev = word
