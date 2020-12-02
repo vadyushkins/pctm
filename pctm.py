@@ -83,6 +83,12 @@ def main():
         , action='store_true'
     )
     parser.add_argument(
+        '-um'
+        , '--unary_multiplication'
+        , help='Check unary multiplication language by Unrestricted Grammar'
+        , action='store_true'
+    )
+    parser.add_argument(
         '-w'
         , '--word'
         , help='Word to check'
@@ -95,7 +101,8 @@ def main():
     if args.turing_machine is False and \
             args.linear_bounded_automaton is False and \
             args.context_sensitive_grammar is False and \
-            args.unrestricted_grammar is False:
+            args.unrestricted_grammar is False and \
+            args.unary_multiplication is False:
         parser.error("At least one of -tm/--turing_machine, "
                      + "-lba/--linear_bounded_automaton, "
                      + "-csg/--context_sensitive_grammar, "
@@ -117,6 +124,10 @@ def main():
     unrestricted_grammar = None
     if args.unrestricted_grammar is True:
         unrestricted_grammar = UnrestrictedGrammar.from_txt('resources/primality_check_ug.txt')
+
+    unary_multiplication = None
+    if args.unary_multiplication is True:
+        unary_multiplication = UnrestrictedGrammar.from_txt('resources/unary_multiplication_ug.txt')
 
     if turing_machine is not None:
         start = timer()
@@ -151,6 +162,16 @@ def main():
         print(f'Check by Unrestricted Grammar: {result} is done in {result_time} seconds')
         if result:
             print_trace(res, unrestricted_grammar)
+
+    if unary_multiplication is not None:
+        start = timer()
+        res = unary_multiplication.accepts(args.word)
+        end = timer()
+        result = res != tuple()
+        result_time = timedelta(seconds=end - start)
+        print(f'Check unary multiplication language by Unrestricted Grammar: {result} is done in {result_time} seconds')
+        if result:
+            print_trace(res, unary_multiplication)
 
 
 if __name__ == '__main__':
